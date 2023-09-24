@@ -1,0 +1,369 @@
+LGOGDownloader 3.9
+Options:
+
+  -h [ --help ]                         Print help message
+  --version                             Print version information
+  --login                               Login
+  --list                                List games
+  --list-details                        List games with detailed info
+  --download                            Download
+  --repair                              Repair downloaded files
+                                        Use --repair --download to redownload 
+                                        files when filesizes don't match 
+                                        (possibly different version). 
+                                        Redownload will rename the old file 
+                                        (appends .old to filename)
+  --game arg                            Set regular expression filter
+                                        for download/list/repair (Perl syntax)
+  --create-xml [=arg(=automatic)]       Create GOG XML for file
+                                        "automatic" to enable automatic XML 
+                                        creation
+  --notifications                       Check notifications
+  --updated                             List/download only games with update 
+                                        flag set
+  --clear-update-flags                  Clear update notification flags
+  --check-orphans arg                   Check for orphaned files (files found 
+                                        on local filesystem that are not found 
+                                        on GOG servers). Sets regular 
+                                        expression filter (Perl syntax) for 
+                                        files to check. If no argument is given
+                                        then the regex defaults to 
+                                        '.*\.(zip|exe|bin|dmg|old|deb|tar\.gz|p
+                                        kg|sh)$'
+  --status                              Show status of files
+                                        
+                                        Output format:
+                                        statuscode gamename filename filesize 
+                                        filehash
+                                        
+                                        Status codes:
+                                        OK - File is OK
+                                        ND - File is not downloaded
+                                        MD5 - MD5 mismatch, different version
+                                        FS - File size mismatch, incomplete 
+                                        download
+  --save-config                         Create config file with current 
+                                        settings
+  --reset-config                        Reset config settings to default
+  --report [=arg(=lgogdownloader-report.log)]
+                                        Save report of downloaded/repaired 
+                                        files to specified file
+                                        Default filename: lgogdownloader-report
+                                        .log
+  --update-cache                        Update game details cache
+  --no-platform-detection               Don't try to detect supported platforms
+                                        from game shelf.
+                                        Skips the initial fast platform 
+                                        detection and detects the supported 
+                                        platforms from game details which is 
+                                        slower but more accurate.
+                                        Useful in case platform identifier is 
+                                        missing for some games in the game 
+                                        shelf.
+                                        Using --platform with --list doesn't 
+                                        work with this option.
+  --download-file arg                   Download files using fileid
+                                        
+                                        Format:
+                                        "gamename/fileid"
+                                        or: "gogdownloader://gamename/fileid"
+                                        
+                                        Multiple files:
+                                        "gamename1/fileid1,gamename2/fileid2"
+                                        or: "gogdownloader://gamename1/fileid1,
+                                        gamename2/fileid2"
+                                        
+                                        This option ignores all subdir options.
+                                        The files are downloaded to directory 
+                                        specified with --directory option.
+  -o [ --output-file ] arg              Set filename of file downloaded with 
+                                        --download-file.
+  --wishlist                            Show wishlist
+  --cacert arg                          Path to CA certificate bundle in PEM 
+                                        format
+  --respect-umask                       Do not adjust permissions of sensitive 
+                                        files
+  --user-agent arg (=LGOGDownloader/3.9)
+                                        Set user agent
+  --enable-login-gui                    Enable login GUI when encountering 
+                                        reCAPTCHA on login form
+  --list-tags                           List tags
+  --tag arg                             Filter using tags. Separate with "," to
+                                        use multiple values
+
+  --directory arg (=.)                  Set download directory
+  --limit-rate arg (=0)                 Limit download rate to value in kB
+                                        0 = unlimited
+  --xml-directory arg                   Set directory for GOG XML files
+  --chunk-size arg (=10)                Chunk size (in MB) when creating XML
+  --platform arg (=w+l)                 Select which installers are downloaded
+                                        Windows = w|win|windows
+                                        Mac = m|mac|osx
+                                        Linux = l|lin|linux
+                                        All = all
+                                        
+                                        Set priority by separating values with 
+                                        ","
+                                        Combine values by separating with "+"
+                                        Example: Linux if available otherwise 
+                                        Windows and Mac: l,w+m
+  --language arg (=en)                  Select which language installers are 
+                                        downloaded
+                                        English = en|eng|english|en[_-]US
+                                        German = de|deu|ger|german|de[_-]DE
+                                        French = fr|fra|fre|french|fr[_-]FR
+                                        Polish = pl|pol|polish|pl[_-]PL
+                                        Russian = ru|rus|russian|ru[_-]RU
+                                        Chinese = cn|zh|zho|chi|chinese|zh[_-]C
+                                        N
+                                        Czech = cz|cs|ces|cze|czech|cs[_-]CZ
+                                        Spanish = es|spa|spanish|es[_-]ES
+                                        Hungarian = hu|hun|hungarian|hu[_-]HU
+                                        Italian = it|ita|italian|it[_-]IT
+                                        Japanese = jp|ja|jpn|japanese|ja[_-]JP
+                                        Turkish = tr|tur|turkish|tr[_-]TR
+                                        Portuguese = pt|por|portuguese|pt[_-]PT
+                                        Korean = ko|kor|korean|ko[_-]KR
+                                        Dutch = nl|nld|dut|dutch|nl[_-]NL
+                                        Swedish = sv|swe|swedish|sv[_-]SE
+                                        Norwegian = no|nor|norwegian|nb[_-]no|n
+                                        n[_-]NO
+                                        Danish = da|dan|danish|da[_-]DK
+                                        Finnish = fi|fin|finnish|fi[_-]FI
+                                        Brazilian Portuguese = 
+                                        br|pt_br|pt-br|ptbr|brazilian_portugues
+                                        e
+                                        Slovak = sk|slk|slo|slovak|sk[_-]SK
+                                        Bulgarian = bl|bg|bul|bulgarian|bg[_-]B
+                                        G
+                                        Ukrainian = uk|ukr|ukrainian|uk[_-]UA
+                                        Spanish (Latin American) = 
+                                        es_mx|es-mx|esmx|es-419|spanish_latin_a
+                                        merican
+                                        Arabic = ar|ara|arabic|ar[_-][A-Z]{2}
+                                        Romanian = ro|ron|rum|romanian|ro[_-][R
+                                        M]O
+                                        Hebrew = he|heb|hebrew|he[_-]IL
+                                        Thai = th|tha|thai|th[_-]TH
+                                        All = all
+                                        
+                                        Set priority by separating values with 
+                                        ","
+                                        Combine values by separating with "+"
+                                        Example: German if available otherwise 
+                                        English and French: de,en+fr
+  --no-remote-xml                       Don't use remote XML for repair
+  --no-unicode                          Don't use Unicode in the progress bar
+  --no-color                            Don't use coloring in the progress bar 
+                                        or status messages
+  --no-duplicate-handling               Don't use duplicate handler for 
+                                        installers
+                                        Duplicate installers from different 
+                                        languages are handled separately
+  --no-subdirectories                   Don't create subdirectories for extras,
+                                        patches and language packs
+  --verbose                             Print lots of information
+  --curl-verbose                        Set libcurl to verbose mode
+  --insecure                            Don't verify authenticity of SSL 
+                                        certificates
+  --timeout arg (=10)                   Set timeout for connection
+                                        Maximum time in seconds that connection
+                                        phase is allowed to take
+  --retries arg (=3)                    Set maximum number of retries on failed
+                                        download
+  --wait arg (=0)                       Time to wait between requests 
+                                        (milliseconds)
+  --subdir-installers arg               Set subdirectory for installers
+                                        Templates:
+                                        - %platform%
+                                        - %gamename%
+                                        - %gamename_firstletter%
+                                        - %dlcname%
+  --subdir-extras arg (=extras)         Set subdirectory for extras
+                                        Templates:
+                                        - %platform%
+                                        - %gamename%
+                                        - %gamename_firstletter%
+                                        - %dlcname%
+  --subdir-patches arg (=patches)       Set subdirectory for patches
+                                        Templates:
+                                        - %platform%
+                                        - %gamename%
+                                        - %gamename_firstletter%
+                                        - %dlcname%
+  --subdir-language-packs arg (=languagepacks)
+                                        Set subdirectory for language packs
+                                        Templates:
+                                        - %platform%
+                                        - %gamename%
+                                        - %gamename_firstletter%
+                                        - %dlcname%
+  --subdir-dlc arg (=dlc/%dlcname%)     Set subdirectory for dlc
+                                        Templates:
+                                        - %platform%
+                                        - %gamename%
+                                        - %gamename_firstletter%
+                                        - %dlcname%
+  --subdir-game arg (=%gamename%)       Set subdirectory for game
+                                        Templates:
+                                        - %platform%
+                                        - %gamename%
+                                        - %gamename_firstletter%
+                                        - %dlcname%
+  --use-cache                           Use game details cache
+  --cache-valid arg (=2880)             Set how long cached game details are 
+                                        valid (in minutes)
+                                        Default: 2880 minutes (48 hours)
+  --save-serials                        Save serial numbers when downloading
+  --ignore-dlc-count [=arg(=.*)]        Set regular expression filter for games
+                                        to ignore DLC count information
+                                        Ignoring DLC count information helps in
+                                        situations where the account page 
+                                        doesn't provide accurate information 
+                                        about DLCs
+  --include arg (=all)                  Select what to download/list/repair
+                                        Installers = i|installers
+                                        Extras = e|extras
+                                        Patches = p|patches
+                                        Language packs = l|languagepacks|langpa
+                                        cks
+                                        DLCs = d|dlc|dlcs
+                                        Separate with "," to use multiple 
+                                        values
+  --exclude arg                         Select what not to download/list/repair
+                                        Installers = i|installers
+                                        Extras = e|extras
+                                        Patches = p|patches
+                                        Language packs = l|languagepacks|langpa
+                                        cks
+                                        DLCs = d|dlc|dlcs
+                                        Separate with "," to use multiple 
+                                        values
+  --automatic-xml-creation              Automatically create XML data after 
+                                        download has completed
+  --save-changelogs                     Save changelogs when downloading
+  --threads arg (=4)                    Number of download threads
+  --info-threads arg (=4)               Number of threads for getting product 
+                                        info
+  --use-dlc-list                        Use DLC list specified with --dlc-list
+  --dlc-list arg (=https://raw.githubusercontent.com/Sude-/lgogdownloader-lists/master/game_has_dlc.txt)
+                                        Set URL for list of games that have DLC
+  --progress-interval arg (=100)        Set interval for progress bar update 
+                                        (milliseconds)
+                                        Value must be between 1 and 10000
+  --lowspeed-timeout arg (=30)          Set time in number seconds that the 
+                                        transfer speed should be below the rate
+                                        set with --lowspeed-rate for it to 
+                                        considered too slow and aborted
+  --lowspeed-rate arg (=200)            Set average transfer speed in bytes per
+                                        second that the transfer should be 
+                                        below during time specified with 
+                                        --lowspeed-timeout for it to be 
+                                        considered too slow and aborted
+  --include-hidden-products             Include games that have been set hidden
+                                        in account page
+  --size-only                           Don't check the hashes of the files 
+                                        whose size matches that on the server
+
+Experimental:
+  --galaxy-install arg                  Install game using product id 
+                                        [product_id/build_index] or gamename 
+                                        regex [gamename/build_id]
+                                        Build index is used to select a build 
+                                        and defaults to 0 if not specified.
+                                        
+                                        Example: 12345/2 selects build 2 for 
+                                        product 12345
+  --galaxy-show-builds arg              Show game builds using product id 
+                                        [product_id/build_index] or gamename 
+                                        regex [gamename/build_id]
+                                        Build index is used to select a build 
+                                        and defaults to 0 if not specified.
+                                        
+                                        Example: 12345/2 selects build 2 for 
+                                        product 12345
+  --galaxy-platform arg (=w)            Select platform
+                                        Windows = w|win|windows
+                                        Mac = m|mac|osx
+                                        Linux = l|lin|linux
+                                        
+  --galaxy-language arg (=en)           Select language
+                                        English = en|eng|english|en[_-]US
+                                        German = de|deu|ger|german|de[_-]DE
+                                        French = fr|fra|fre|french|fr[_-]FR
+                                        Polish = pl|pol|polish|pl[_-]PL
+                                        Russian = ru|rus|russian|ru[_-]RU
+                                        Chinese = cn|zh|zho|chi|chinese|zh[_-]C
+                                        N
+                                        Czech = cz|cs|ces|cze|czech|cs[_-]CZ
+                                        Spanish = es|spa|spanish|es[_-]ES
+                                        Hungarian = hu|hun|hungarian|hu[_-]HU
+                                        Italian = it|ita|italian|it[_-]IT
+                                        Japanese = jp|ja|jpn|japanese|ja[_-]JP
+                                        Turkish = tr|tur|turkish|tr[_-]TR
+                                        Portuguese = pt|por|portuguese|pt[_-]PT
+                                        Korean = ko|kor|korean|ko[_-]KR
+                                        Dutch = nl|nld|dut|dutch|nl[_-]NL
+                                        Swedish = sv|swe|swedish|sv[_-]SE
+                                        Norwegian = no|nor|norwegian|nb[_-]no|n
+                                        n[_-]NO
+                                        Danish = da|dan|danish|da[_-]DK
+                                        Finnish = fi|fin|finnish|fi[_-]FI
+                                        Brazilian Portuguese = 
+                                        br|pt_br|pt-br|ptbr|brazilian_portugues
+                                        e
+                                        Slovak = sk|slk|slo|slovak|sk[_-]SK
+                                        Bulgarian = bl|bg|bul|bulgarian|bg[_-]B
+                                        G
+                                        Ukrainian = uk|ukr|ukrainian|uk[_-]UA
+                                        Spanish (Latin American) = 
+                                        es_mx|es-mx|esmx|es-419|spanish_latin_a
+                                        merican
+                                        Arabic = ar|ara|arabic|ar[_-][A-Z]{2}
+                                        Romanian = ro|ron|rum|romanian|ro[_-][R
+                                        M]O
+                                        Hebrew = he|heb|hebrew|he[_-]IL
+                                        Thai = th|tha|thai|th[_-]TH
+                                        
+  --galaxy-arch arg (=x64)              Select architecture
+                                        32-bit = 32|x86|32bit|32-bit
+                                        64-bit = 64|x64|64bit|64-bit
+                                        
+  --galaxy-no-dependencies              Don't download dependencies during 
+                                        --galaxy-install
+  --subdir-galaxy-install arg (=%install_dir%)
+                                        Set subdirectory for galaxy install
+                                        
+                                        Templates:
+                                        - %install_dir% = Installation 
+                                        directory from Galaxy API response
+                                        - %gamename% = Game name
+                                        - %title% = Title of the game
+                                        - %product_id% = Product id of the game
+                                        - %install_dir_stripped% = 
+                                        %install_dir% with some characters 
+                                        stripped
+                                        - %title_stripped% = %title% with some 
+                                        characters stripped
+                                        
+                                        "stripped" means that every character 
+                                        that doesn't match the following list 
+                                        is removed:
+                                        > alphanumeric
+                                        > space
+                                        > - _ . ( ) [ ] { }
+  --galaxy-cdn-priority arg (=edgecast,highwinds,akamai,lumen,gog_cdn)
+                                        Set priority for used CDNs
+                                        Edgecast = ec|edgecast
+                                        Highwinds = hw|highwinds|high_winds
+                                        GOG = gog|gog_cdn
+                                        Lumen = lumen|lumen_cdn
+                                        Akamai = akamai|akamai_cdn|akamai_ec|ak
+                                        amai_edgecast_proxy
+                                        
+                                        Set priority by separating values with 
+                                        ","
+                                        Combine values by separating with "+"
+  --galaxy-delete-orphans               Delete orphaned files during 
+                                        --galaxy-install
+
