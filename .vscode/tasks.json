@@ -9,12 +9,12 @@
                 "-g",
                 "${file}",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}",
+                "${fileDirname}/../build/${fileBasenameNoExtension}",
                 "-I", 
                 "/usr/include/pstreams/"
             ],
             "options": {
-                "cwd": "${fileDirname}"
+                "cwd": "${fileDirname}/../build"
             },
             "problemMatcher": [
                 "$gcc"
