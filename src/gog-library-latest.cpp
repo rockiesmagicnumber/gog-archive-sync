@@ -42,13 +42,13 @@ int main()
 		// get all installer files in the game directory
 		// cout << currentDirectory << endl;
 		string currentInstallersCommand = lsCommand + space + gameInstallersRoot + currentDirectory + gogDir + space + pipeGrepComand;
-		const char *currentInstallersCharCommand = currentInstallersCommand.c_str();
-		vector<string> currentlyDownloadedInstallers = splitCLIresults(currentInstallersCharCommand, newlineDelimiter);
+		// const char *currentInstallersCharCommand = currentInstallersCommand.c_str();
+		vector<string> currentlyDownloadedInstallers = splitCLIresults(currentInstallersCommand.c_str(), newlineDelimiter);
 
 		// get list of files from lgog
 		string thisGameCommand = lgogdownladerCommand + space + lgogdownloaderListDetailsArgument + space + lgogdownloaderGameArgument + space + currentGame;
-		const char *thisGameCharCommand = thisGameCommand.c_str();
-		map<string, string> installerFileNamesFromGOG = parseInstallerFilesFromLgogReturn(splitCLIresults(thisGameCharCommand, newlineDelimiter));
+		// const char *thisGameCharCommand = thisGameCommand.c_str();
+		map<string, string> installerFileNamesFromGOG = parseInstallerFilesFromLgogReturn(splitCLIresults(thisGameCommand.c_str(), newlineDelimiter));
 
 		vector<string> filesToGetFromGOG;
 		for (pair<string, string> fn : installerFileNamesFromGOG)
@@ -66,11 +66,18 @@ int main()
 		copy(begin(filesToGetFromGOG), end(filesToGetFromGOG), ostream_iterator<string>(oss, ","));
 		string fileDownloadArguments = oss.str();
 
+		// TODO: PERFORM LGOG FILE DOWNLOAD
+
 		for (string existingFile : currentlyDownloadedInstallers)
 		{
 			// check each `existingFile` to ensure it's on the GOG list.
+			if (installerFileNamesFromGOG.find(existingFile) == installerFileNamesFromGOG.end())
+			{
+				//  If not, delete
+				// TODO: DELETE EXTRANEOUS FILE
+			}
+
 			//  If so, continue
-			//  If not, delete
 		}
 
 		// for_each(installerFileNamesFromGOG.begin(), installerFileNamesFromGOG.end(), logthis);
