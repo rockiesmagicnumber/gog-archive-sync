@@ -83,16 +83,23 @@ namespace goglibrarylatest
         return split(execCLI(cmd), delimiter);
     }
 
-    map<string, string> getInstallerFilesFromGOG(vector<string> thisGameDetailList)
+    map<string, string> parseInstallerFilesFromLgogReturn(vector<string> thisGameDetailList)
     {
+        // create return dictionary
         map<string, string> gogInstallers;
         bool isInInstallersSection = false;
         string fileId, path;
+        
+        // iterate over each line in the sh return
         for (size_t t = 0; t < thisGameDetailList.size(); t++)
         {
+            // capture current line
             string curLine = thisGameDetailList[t];
+            // is this line where the installer files section begins?
             if (curLine.rfind("installers", 0) == 0)
             {
+                // we have found the header for the installers section.
+                //  This line won't have relevant data
                 isInInstallersSection = true;
                 continue;
             }
@@ -102,23 +109,27 @@ namespace goglibrarylatest
             }
             if (isInInstallersSection)
             {
+                // this identifies the filename so we can compare against the library
                 if (curLine.rfind(pathRowConstant, 0) == 0)
                 {
                     string filename = curLine.substr(curLine.find_last_of("/") + 1);
                     path = filename;
                 }
+                // this identifies the file id so we can request it from lgogdownloader
                 if (curLine.rfind(fileIdRowConstant, 0) == 0)
                 {
                     string filename = curLine.substr(curLine.find_last_of(":") + 1);
                     fileId = filename;
                 }
             }
+            // if this line starts with a tab, move to the next iterand
             if (curLine.rfind("\t") == 0)
             {
                 continue;
             }
             else
             {
+                // we're done with this particular file, record it and move on
                 if (!fileId.empty() && !path.empty())
                 {
                     gogInstallers[fileId] = path;
@@ -127,6 +138,7 @@ namespace goglibrarylatest
                 break;
             }
         }
+
         return gogInstallers;
     }
 

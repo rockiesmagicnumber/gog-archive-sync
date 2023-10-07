@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <sstream>
 #include <set>
 #include <pstream.h>
 #include <iostream>
@@ -7,6 +9,7 @@
 #include <memory>
 #include <stdexcept>
 #include <vector>
+#include <iterator>
 #include "headers.h"
 
 using namespace std;
@@ -40,24 +43,28 @@ int main()
 		// cout << currentDirectory << endl;
 		string currentInstallersCommand = lsCommand + space + gameInstallersRoot + currentDirectory + gogDir + space + pipeGrepComand;
 		const char *currentInstallersCharCommand = currentInstallersCommand.c_str();
-		set<string> currentlyDownloadedInstallers = vectorToSet(splitCLIresults(currentInstallersCharCommand, newlineDelimiter));
+		vector<string> currentlyDownloadedInstallers = splitCLIresults(currentInstallersCharCommand, newlineDelimiter);
 
 		// get list of files from lgog
 		string thisGameCommand = lgogdownladerCommand + space + lgogdownloaderListDetailsArgument + space + lgogdownloaderGameArgument + space + currentGame;
-		// cout << thisGameCommand << endl;
 		const char *thisGameCharCommand = thisGameCommand.c_str();
-		map<string, string> installerFileNamesFromGOG = getInstallerFilesFromGOG(splitCLIresults(thisGameCharCommand, newlineDelimiter));
+		map<string, string> installerFileNamesFromGOG = parseInstallerFilesFromLgogReturn(splitCLIresults(thisGameCharCommand, newlineDelimiter));
 
 		vector<string> filesToGetFromGOG;
 		for (pair<string, string> fn : installerFileNamesFromGOG)
 		{
-			// check to see if the current file from GOG already exists in the `currentlyDownloadedInstallers` set
-			//  if not, filesToGetFromGOG.push_back gamename/fileid
-			//  if so, continue
+			// check to see if the current file from GOG already exists in the `currentlyDownloadedInstallers` vector
+			if (find(currentlyDownloadedInstallers.begin(), currentlyDownloadedInstallers.end(), fn.second) == currentlyDownloadedInstallers.end())
+			{
+				// if not, filesToGetFromGOG.push_back gamename/fileid
+				filesToGetFromGOG.push_back(fn.first);
+			}
 		}
-		
-		// create comma-separated string of {gamename/fileid}s and pass it to the `--download-file` parameter in lgog
 
+		// create comma-separated string of {gamename/fileid}s and pass it to the `--download-file` parameter in lgog
+		ostringstream oss;
+		copy(begin(filesToGetFromGOG), end(filesToGetFromGOG), ostream_iterator<string>(oss, ","));
+		string fileDownloadArguments = oss.str();
 
 		for (string existingFile : currentlyDownloadedInstallers)
 		{
