@@ -7,11 +7,14 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${file}",
+                "${workspaceFolder}/src/gog-library-latest.cpp",
+                "${workspaceFolder}/src/utility.cpp",
                 "-o",
                 "${fileDirname}/../build/${fileBasenameNoExtension}",
                 "-I", 
-                "/usr/include/pstreams/"
+                "/usr/include/pstreams/",
+                "-I",
+                "/usr/include/boost"
             ],
             "options": {
                 "cwd": "${fileDirname}/../build"

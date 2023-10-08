@@ -1,6 +1,5 @@
-#include <algorithm>
-#include <sstream>
-#include <set>
+#include "headers.hpp"
+#include <map>
 #include <pstream.h>
 #include <iostream>
 #include <string>
@@ -9,24 +8,33 @@
 #include <memory>
 #include <stdexcept>
 #include <vector>
-#include <iterator>
-#include "headers.h"
+#include <set>
+#include <boost/range.hpp>
+#include <boost/range/algorithm.hpp>
+#include <boost/range/adaptor/map.hpp>
 
 using namespace std;
-using namespace constants;
-using namespace constants::lgogdownloader;
-using namespace goglibrarylatest;
+using namespace RMN;
+using namespace RMN::filemanagers;
 
 // main
 int main()
 {
-	// get all directories in installer root
-	string allDirectoriesCommand = lsCommand + space + gameInstallersRoot;
-	const char *allDirectoriesCharCommand = allDirectoriesCommand.c_str();
-	string allDirectoriesStr = execCLI(allDirectoriesCharCommand);
+	try
+	{
+		gog_library_latest gll;
+		int i = gll.Execute();
+		return i;
+	}
+	catch (exception ex)
+	{
+		return 0;
+	}
+}
 
-	// get all directories from console return
-	vector<string> allDirectories = split(allDirectoriesStr, newlineDelimiter);
+int gog_library_latest::Execute()
+{
+	vector<string> allDirectories = filemanagerFunctions::GetAllDirectories();
 
 	// iterate over each game directory
 	for (size_t gameDirIndex = 20;
@@ -39,16 +47,12 @@ int main()
 		{
 			continue;
 		}
-		// get all installer files in the game directory
-		// cout << currentDirectory << endl;
-		string currentInstallersCommand = lsCommand + space + gameInstallersRoot + currentDirectory + gogDir + space + pipeGrepComand;
-		// const char *currentInstallersCharCommand = currentInstallersCommand.c_str();
-		vector<string> currentlyDownloadedInstallers = splitCLIresults(currentInstallersCommand.c_str(), newlineDelimiter);
 
-		// get list of files from lgog
-		string thisGameCommand = lgogdownladerCommand + space + lgogdownloaderListDetailsArgument + space + lgogdownloaderGameArgument + space + currentGame;
-		// const char *thisGameCharCommand = thisGameCommand.c_str();
-		map<string, string> installerFileNamesFromGOG = parseInstallerFilesFromLgogReturn(splitCLIresults(thisGameCommand.c_str(), newlineDelimiter));
+		// get all installer files in the game directory
+		vector<string> currentlyDownloadedInstallers = filemanagerFunctions::GetInstallerFilesFromDirectory(currentDirectory);
+
+		// get list of files from lgog;
+		map<string, string> installerFileNamesFromGOG = filemanagerFunctions::GetGameInstallerFilesFromGOG(currentGame);
 
 		vector<string> filesToGetFromGOG;
 		for (pair<string, string> fn : installerFileNamesFromGOG)
@@ -60,26 +64,33 @@ int main()
 				filesToGetFromGOG.push_back(fn.first);
 			}
 		}
-
-		// create comma-separated string of {gamename/fileid}s and pass it to the `--download-file` parameter in lgog
-		ostringstream oss;
-		copy(begin(filesToGetFromGOG), end(filesToGetFromGOG), ostream_iterator<string>(oss, ","));
-		string fileDownloadArguments = oss.str();
-
-		// TODO: PERFORM LGOG FILE DOWNLOAD
-
-		for (string existingFile : currentlyDownloadedInstallers)
+		if (!filesToGetFromGOG.size())
 		{
-			// check each `existingFile` to ensure it's on the GOG list.
-			if (installerFileNamesFromGOG.find(existingFile) == installerFileNamesFromGOG.end())
-			{
-				//  If not, delete
-				// TODO: DELETE EXTRANEOUS FILE
-			}
+			continue;
+		}
+		string downloadFileCommand = "";
+		if (filemanagerFunctions::NeedToDownloadAllFiles(filesToGetFromGOG, installerFileNamesFromGOG))
+		{
+			// TODO: set downloadFileCommand to download all files for that game
+		}
+		else
+		{
+			// create comma-separated string of {gamename/fileid}s and pass it to the `--download-file` parameter in lgog
+			ostringstream oss;
+			copy(begin(filesToGetFromGOG), end(filesToGetFromGOG), ostream_iterator<string>(oss, ","));
+			string fileDownloadArguments = oss.str();
 
-			//  If so, continue
+			// TODO: set downloadFileCommand to the --download-file version
 		}
 
+		// TODO: PERFORM LGOG FILE DOWNLOAD
+		// downloadFileCommand = lgogdownloaderCommand + space + down;
+
+		// remove all old installer files that aren't on THE LIST
+		filemanagerFunctions::TrimFilesToGogList(currentlyDownloadedInstallers, installerFileNamesFromGOG);
+
 		// for_each(installerFileNamesFromGOG.begin(), installerFileNamesFromGOG.end(), logthis);
+
+		return 1;
 	}
 }
